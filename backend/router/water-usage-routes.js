@@ -1,15 +1,15 @@
 const express = require('express');
-const router = express.Router();
+const waterRouter = express.Router();
 const waterUsageController = require('../controllers/water-usage-controller');
 const authMiddleware = require('../middlewares/auth-middleware');
 const Roles = require("../enums/roles");
 
-router.post('/', authMiddleware([Roles.ADMIN]), waterUsageController.recordUsage);
-router.get('/:householdId', authMiddleware([Roles.ADMIN]), waterUsageController.getUsageByHousehold);
-router.get('/waterusage', authMiddleware([Roles.ADMIN]), waterUsageController.getAllUsage);
-router.put('/:id', authMiddleware([Roles.ADMIN]), waterUsageController.updateUsage);
-router.delete('/:id', authMiddleware([Roles.ADMIN]), waterUsageController.deleteUsage);
+waterRouter.post('/', authMiddleware([Roles.ADMIN]), waterUsageController.recordUsage);
+waterRouter.get('/:householdId', authMiddleware([Roles.ADMIN]), waterUsageController.getUsageByHousehold);
+waterRouter.get('/waterusage', authMiddleware([Roles.ADMIN]), waterUsageController.getAllUsage);
+waterRouter.put('/:id', authMiddleware([Roles.ADMIN]), waterUsageController.updateUsage);
+waterRouter.delete('/:id', authMiddleware([Roles.ADMIN]), waterUsageController.deleteUsage);
 // Route to get ward-wise usage report
-router.get('/ward-wise-usage',authMiddleware([Roles.ADMIN]), waterUsageController.getWardWiseUsageReport);
+waterRouter.get('/ward-wise-usage',authMiddleware([Roles.ADMIN]), waterUsageController.getWardWiseUsageReport);
 
-module.exports = router;
+module.exports = waterRouter;

@@ -8,54 +8,60 @@ import {
   YAxis,
   Tooltip,
   Legend,
-} from "recharts";
-import {
   PieChart,
   Pie,
   Cell,
-  Tooltip as PieTooltip,
-  Legend as PieLegend,
+  ResponsiveContainer,
 } from "recharts";
-import { ResponsiveContainer } from "recharts";
-import axios from "axios";
 import DashboardLayout from "../Dashboard/DashboardLayout";
 import "../../../stylesheets/Admin/Dashboard/Dashboard.css";
-import { API_URL } from "../../../store/apiUrl";
 import moment from "moment";
 
 const Dashboard = () => {
   const [data, setData] = useState({
-    totalHouseholds: 0,
-    supplyToday: 0,
-    monthlySupply: 0,
-    totalSupply:0,
-    yearlySupply: 0,
-    usageData: [],
-    totalUsers: 0,
-    recentUsages: [],
+    totalHouseholds: 100,
+    supplyToday: 1500,
+    monthlySupply: 45000,
+    yearlySupply: 540000,
+    totalSupply: 6000000,
+    usageData: [
+      { date: "2023-07-01", amount: 100 },
+      { date: "2023-07-02", amount: 150 },
+      { date: "2023-07-03", amount: 200 },
+      { date: "2023-07-04", amount: 250 },
+      { date: "2023-07-05", amount: 300 },
+      { date: "2023-07-06", amount: 350 },
+      { date: "2023-07-07", amount: 400 },
+    ],
+    totalUsers: 50,
+    recentUsages: [
+      {
+        status: "Completed",
+        address: {
+          firstName: "John",
+          lastName: "Doe",
+          phone: "1234567890",
+        },
+        amount: 100,
+        date: "2023-07-01",
+      },
+      {
+        status: "Pending",
+        address: {
+          firstName: "Jane",
+          lastName: "Smith",
+          phone: "0987654321",
+        },
+        amount: 150,
+        date: "2023-07-02",
+      },
+    ],
   });
 
   const [reportModalVisible, setReportModalVisible] = useState(false);
   const [reportContent, setReportContent] = useState("");
 
-  const dashboardUrl = `${API_URL}/api/v1/reports/dashboard/`;
-  const reportApiUrl = `${API_URL}/api/dashboard/report`;
-
-  const token = localStorage.getItem("token");
-
   const formatDate = (tick) => moment(tick).format("DD-MM-YYYY");
-
-  const generateReport = async (type) => {
-    try {
-      const response = await axios.get(`${reportApiUrl}?type=${type}`, {
-        headers: { token },
-      });
-      setReportContent(response.data);
-      setReportModalVisible(true);
-    } catch (error) {
-      console.error("Error fetching report:", error);
-    }
-  };
 
   const handleCloseReportModal = () => {
     setReportModalVisible(false);
@@ -72,7 +78,7 @@ const Dashboard = () => {
           <Button
             key="download"
             type="primary"
-            href={`${reportApiUrl}?type=download`}
+            href="#"
             download
           >
             Download
@@ -86,31 +92,6 @@ const Dashboard = () => {
       </Modal>
     );
   };
-
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(dashboardUrl, { headers: { Authorization: `Bearer ${token}` } });
-      const dashboardData = response.data;
-      setData({
-        totalHouseholds: dashboardData.totalHouseholds,
-        supplyToday: dashboardData.totalUsageToday,
-        monthlySupply: dashboardData.monthlyUsage,
-        yearlySupply: dashboardData.yearlyUsage,
-        totalSupply: dashboardData.totalUsage,
-        usageData: dashboardData.usageData,
-        totalUsers: dashboardData.totalUsers,
-        recentUsages: dashboardData.recentReports,
-      });
-      console.log("dashboard ke liye aya hu", dashboardData);
-      console.log("data hi data h",data);
-    } catch (error) {
-      console.error("Error fetching dashboard data:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   const colors = [
     "#1e90ff",
@@ -132,21 +113,21 @@ const Dashboard = () => {
           <div className="report-buttons">
             <Button
               type="primary"
-              onClick={() => generateReport("weekly")}
+              onClick={() => console.log("Generate Weekly Report")}
               className="report-btn"
             >
               Weekly Report
             </Button>
             <Button
               type="primary"
-              onClick={() => generateReport("monthly")}
+              onClick={() => console.log("Generate Monthly Report")}
               className="report-btn"
             >
               Monthly Report
             </Button>
             <Button
               type="primary"
-              onClick={() => generateReport("yearly")}
+              onClick={() => console.log("Generate Yearly Report")}
               className="report-btn"
             >
               Yearly Report
@@ -156,31 +137,22 @@ const Dashboard = () => {
         <hr />
 
         <div className="dashboard-cards">
-          <div>
-            <Card title="Total Households" className="dashboard-card card1">
-              {data.totalHouseholds}
-            </Card>
-          </div>
-          <div>
-            <Card title="Total Water Supplied" className="dashboard-card card2">
-              {data.totalSupply}
-            </Card>
-          </div>
-          <div>
-            <Card title="Monthly Water Supply" className="dashboard-card card3">
-              {data.monthlySupply}
-            </Card>
-          </div>
-          <div>
-            <Card title="Yearly Water Supply" className="dashboard-card card4">
-              {data.yearlySupply}
-            </Card>
-          </div>
+          <Card title="Total Households" className="dashboard-card card1">
+            {data.totalHouseholds}
+          </Card>
+          <Card title="Total Water Supplied" className="dashboard-card card2">
+            {data.totalSupply}
+          </Card>
+          <Card title="Monthly Water Supply" className="dashboard-card card3">
+            {data.monthlySupply}
+          </Card>
+          <Card title="Yearly Water Supply" className="dashboard-card card4">
+            {data.yearlySupply}
+          </Card>
         </div>
 
         <hr />
 
-        {/* Line chart */}
         <div className="chart-container">
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={data.usageData}>
@@ -199,35 +171,52 @@ const Dashboard = () => {
           </ResponsiveContainer>
         </div>
 
+        <div className="chart-container">
+          <ResponsiveContainer width="100%" height={300}>
+            <PieChart>
+              <Pie
+                data={data.usageData}
+                dataKey="amount"
+                nameKey="date"
+                cx="50%"
+                cy="50%"
+                outerRadius={100}
+                fill="#8884d8"
+                label
+              >
+                {data.usageData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+
         <div className="tableRow">
           <hr />
           <Table
             dataSource={data.recentUsages}
-            scroll={{
-              x: 500,
-            }}
+            scroll={{ x: 500 }}
             columns={[
               { title: "Status", dataIndex: "status", key: "status" },
-
               {
                 title: "User Name",
                 key: "userName",
                 render: (text, record) =>
                   `${record.address.firstName} ${record.address.lastName}`,
               },
-
               {
                 title: "User Phone",
                 key: "phone",
                 render: (text, record) => `${record.address.phone}`,
               },
-
               {
                 title: "Total Amount",
                 key: "amount",
                 render: (text, record) => `${record.amount}`,
               },
-
               {
                 title: "Date",
                 dataIndex: "date",

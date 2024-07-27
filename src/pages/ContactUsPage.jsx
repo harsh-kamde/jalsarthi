@@ -16,7 +16,7 @@ const ContactUsPage = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    subject: "",
+    phone: "",
     message: "",
   });
 
@@ -35,16 +35,14 @@ const ContactUsPage = () => {
     console.log(JSON.stringify(formData));
 
     try {
-      let response = await axios.post(`${API_URL}/api/contact/`, formData, {
-        headers: { token },
-      });
+      let response = await axios.post(`${API_URL}/api/v1/contact/`, formData);
 
       if (response.status === 201) {
         toast.success("Your request has been sent successfully!");
         setFormData({
           name: "",
           email: "",
-          subject: "",
+          mobile: "",
           message: "",
         }); // Reset the form
       } else {
@@ -145,9 +143,9 @@ const ContactUsPage = () => {
                     <input
                       required
                       className="form-control"
-                      placeholder="Subject"
-                      name="subject"
-                      value={formData.subject}
+                      placeholder="Phone"
+                      name="phone"
+                      value={formData.phone}
                       onChange={handleChange}
                     />
                   </div>

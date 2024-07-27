@@ -18,6 +18,8 @@ const householdRoutes = require('./router/household-routes');
 const waterUsageRoutes = require('./router/water-usage-routes');
 const wardRoutes = require('./router/ward-routes');
 const reportRoutes = require('./router/report-routes');
+const contactRouter = require('./router/contact-route');
+const leakageRouter = require('./router/leakageRoutes');
 
 app.use(cors(corsOptions)); 
 
@@ -28,9 +30,10 @@ app.use('/api/v1/households', householdRoutes);
 app.use('/api/v1/water-usage', waterUsageRoutes);
 app.use('/api/v1/wards', wardRoutes);
 app.use('/api/v1/reports', reportRoutes);
+app.use('/api/v1/contact',contactRouter);
+app.use('/api/v1/leakage',leakageRouter);
 
 app.use(errorMiddleware);
-
 
 const PORT = process.env.PORT;
 

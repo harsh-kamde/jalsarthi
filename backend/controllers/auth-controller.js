@@ -100,4 +100,13 @@ const user = async (req, res) => {
   }
 };
 
-module.exports = { home, register, login, user };
+const getAllUsers = async(req, res) =>{
+  try{
+    const users = await User.find();
+    return res.status(200).json(users);
+  }catch(error){
+    console.log(`error from user route ${error}`);
+  }
+};
+
+module.exports = { home, register, login, user, getAllUsers };

@@ -12,6 +12,7 @@ router
     .post(validate(signupSchema),authMiddleware([Roles.ADMIN]),authcontroller.register);
 router.route("/login").post(authcontroller.login); 
 
-router.route('/user').get(authMiddleware,authcontroller.user);
+router.route('/user').get(authMiddleware([Roles.ADMIN]),authcontroller.user);
+router.route('/allUsers').get(authMiddleware([Roles.ADMIN]),authcontroller.getAllUsers);
 
 module.exports = router;
