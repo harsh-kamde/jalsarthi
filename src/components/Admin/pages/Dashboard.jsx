@@ -28,16 +28,17 @@ const Dashboard = () => {
     totalHouseholds: 0,
     supplyToday: 0,
     monthlySupply: 0,
+    totalSupply:0,
     yearlySupply: 0,
     usageData: [],
-    supplyByCategory: [],
+    totalUsers: 0,
     recentUsages: [],
   });
 
   const [reportModalVisible, setReportModalVisible] = useState(false);
   const [reportContent, setReportContent] = useState("");
 
-  const dashboardUrl = `${API_URL}/api/dashboard/`;
+  const dashboardUrl = `${API_URL}/api/v1/reports/dashboard/`;
   const reportApiUrl = `${API_URL}/api/dashboard/report`;
 
   const token = localStorage.getItem("token");
@@ -88,18 +89,20 @@ const Dashboard = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(dashboardUrl, { headers: { token } });
+      const response = await axios.get(dashboardUrl, { headers: { Authorization: `Bearer ${token}` } });
       const dashboardData = response.data;
       setData({
         totalHouseholds: dashboardData.totalHouseholds,
-        supplyToday: dashboardData.supplyToday,
-        monthlySupply: dashboardData.monthlySupply,
-        yearlySupply: dashboardData.yearlySupply,
+        supplyToday: dashboardData.totalUsageToday,
+        monthlySupply: dashboardData.monthlyUsage,
+        yearlySupply: dashboardData.yearlyUsage,
+        totalSupply: dashboardData.totalUsage,
         usageData: dashboardData.usageData,
-        supplyByCategory: dashboardData.supplyByCategory,
-        recentUsages: dashboardData.recentUsages,
+        totalUsers: dashboardData.totalUsers,
+        recentUsages: dashboardData.recentReports,
       });
-      console.log("data hi data h",setData);
+      console.log("dashboard ke liye aya hu", dashboardData);
+      console.log("data hi data h",data);
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
     }
@@ -159,8 +162,8 @@ const Dashboard = () => {
             </Card>
           </div>
           <div>
-            <Card title="Water Supplied Today" className="dashboard-card card2">
-              {data.supplyToday}
+            <Card title="Total Water Supplied" className="dashboard-card card2">
+              {data.totalSupply}
             </Card>
           </div>
           <div>
@@ -193,37 +196,6 @@ const Dashboard = () => {
                 activeDot={{ r: 8 }}
               />
             </LineChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Pie chart */}
-        <div className="chart-container">
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={data.supplyByCategory}
-                labelLine={false}
-                label={({ name, percent }) => `${(percent * 100).toFixed(0)}%`}
-                outerRadius={80}
-                fill="#00bfff"
-                dataKey="count"
-                nameKey="_id"
-              >
-                {data.supplyByCategory.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={colors[index % colors.length]}
-                  />
-                ))}
-              </Pie>
-              <PieTooltip
-                formatter={(value, name, props) => [
-                  `${value}`,
-                  `${props.payload._id}`,
-                ]}
-              />
-              <PieLegend />
-            </PieChart>
           </ResponsiveContainer>
         </div>
 

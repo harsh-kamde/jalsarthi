@@ -65,14 +65,14 @@ const SignIn = () => {
       <Helmet>
         <meta charSet="utf-8" />
         <link rel="icon" href="/images/icon.webp" />
-        <title>Login to SkyHut Cafe - Access Your Account</title>
+        <title>Login - Access Your Account</title>
         <meta
           name="title"
-          content="Login to SkyHut Cafe - Access Your Account"
+          content="Login to - Access Your Account"
         />
         <meta
           name="description"
-          content="Sign in to your SkyHut Cafe account to manage your reservations, orders, events and more. Enjoy a seamless dining experience with easy access to all our services"
+          content="Sign in to your experience with easy access to all our services"
         />
         <meta
           name="keywords"

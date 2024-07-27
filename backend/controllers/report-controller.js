@@ -1,239 +1,173 @@
-import React, { useState, useEffect } from "react";
-import { Layout, Card, Table, Button, Modal } from "antd";
-import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from "recharts";
-import { PieChart, Pie, Cell, Tooltip as PieTooltip, Legend as PieLegend } from "recharts";
-import { ResponsiveContainer } from "recharts";
-import axios from "axios";
-import DashboardLayout from "../Dashboard/DashboardLayout";
-import "../../../stylesheets/Admin/Dashboard/Dashboard.css";
-import { API_URL } from "../../../store/apiUrl";
-import moment from "moment";
+const Report = require('../models/report');
+const WaterUsage = require('../models/waterusage');
+const Household = require('../models/household');
+const User = require('../models/user-model');
 
-const Dashboard = () => {
-  const [data, setData] = useState({
-    totalHouseholds: 0,
-    totalUsers: 0,
-    totalUsage: 0,
-    totalUsageToday: 0,
-    monthlyUsage: 0,
-    yearlyUsage: 0,
-    recentReports: [],
-  });
-
-  const [reportModalVisible, setReportModalVisible] = useState(false);
-  const [reportContent, setReportContent] = useState("");
-
-  const dashboardUrl = `${API_URL}/api/dashboard/`;
-  const reportApiUrl = `${API_URL}/api/dashboard/report`;
-
-  const token = localStorage.getItem("token");
-
-  const formatDate = (tick) => moment(tick).format("DD-MM-YYYY");
-
-  const generateReport = async (type) => {
+// Generate Monthly or Yearly Report
+const generateReport = async (req, res) => {
     try {
-      const response = await axios.get(`${reportApiUrl}?type=${type}`, {
-        headers: { token },
-      });
-      setReportContent(response.data);
-      setReportModalVisible(true);
+        const { wardId, period } = req.body;
+        console.log(req.body);
+        if (!['monthly', 'yearly'].includes(period)) {
+            return res.status(400).send({ error: "Invalid period. Use 'monthly' or 'yearly'." });
+        }
+
+        // Calculate start and end dates based on period
+        let startDate, endDate;
+        const today = new Date();
+        
+        if (period === 'monthly') {
+            startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+            endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+        } else if (period === 'yearly') {
+            startDate = new Date(today.getFullYear(), 0, 1);
+            endDate = new Date(today.getFullYear() + 1, 0, 0);
+        }
+        console.log("startDate:", startDate);
+        console.log("endDate:", endDate);
+
+        const totalUsage = await WaterUsage.aggregate([
+            { $match: { ward: wardId, timestamp: { $gte: startDate, $lte: endDate } } },
+            { $group: { _id: null, total: { $sum: "$usage" } } }
+        ]);
+        console.log(totalUsage);
+        const householdCount = await Household.countDocuments({ ward: wardId });
+        const averageUsagePerHousehold = householdCount > 0 ? (totalUsage[0]?.total || 0) / householdCount : 0;
+
+        const leakageDetected = false; // Placeholder logic, needs proper implementation
+
+        const report = new Report({
+            ward: wardId,
+            period: period,
+            startDate: startDate,
+            endDate: endDate,
+            totalUsage: totalUsage[0]?.total || 0,
+            averageUsagePerHousehold: averageUsagePerHousehold,
+            leakageDetected: leakageDetected
+        });
+        console.log("report:", report);
+        await report.save();
+        res.status(201).send(report);
     } catch (error) {
-      console.error("Error fetching report:", error);
+        res.status(400).send({ error: "Failed to generate report." });
     }
-  };
-
-  const handleCloseReportModal = () => {
-    setReportModalVisible(false);
-    setReportContent("");
-  };
-
-  const renderReportModal = () => {
-    return (
-      <Modal
-        title="Generated Report"
-        visible={reportModalVisible}
-        onCancel={handleCloseReportModal}
-        footer={[
-          <Button
-            key="download"
-            type="primary"
-            href={`${reportApiUrl}?type=download`}
-            download
-          >
-            Download
-          </Button>,
-          <Button key="close" onClick={handleCloseReportModal}>
-            Close
-          </Button>,
-        ]}
-      >
-        <div dangerouslySetInnerHTML={{ __html: reportContent }} />
-      </Modal>
-    );
-  };
-
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(dashboardUrl, { headers: { token } });
-      const dashboardData = response.data;
-      setData({
-        totalHouseholds: dashboardData.totalHouseholds,
-        totalUsers: dashboardData.totalUsers,
-        totalUsage: dashboardData.totalUsage,
-        totalUsageToday: dashboardData.totalUsageToday,
-        monthlyUsage: dashboardData.monthlyUsage,
-        yearlyUsage: dashboardData.yearlyUsage,
-        recentReports: dashboardData.recentReports,
-      });
-    } catch (error) {
-      console.error("Error fetching dashboard data:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  return (
-    <DashboardLayout>
-      <div className="container dashboard-content">
-        <div className="dashboard-top">
-          <div>
-            <h3>Dashboard</h3>
-          </div>
-
-          <div className="report-buttons">
-            <Button
-              type="primary"
-              onClick={() => generateReport("weekly")}
-              className="report-btn"
-            >
-              Weekly Report
-            </Button>
-            <Button
-              type="primary"
-              onClick={() => generateReport("monthly")}
-              className="report-btn"
-            >
-              Monthly Report
-            </Button>
-            <Button
-              type="primary"
-              onClick={() => generateReport("yearly")}
-              className="report-btn"
-            >
-              Yearly Report
-            </Button>
-          </div>
-        </div>
-        <hr />
-
-        <div className="dashboard-cards">
-          <div>
-            <Card title="Total Households" className="dashboard-card card1">
-              {data.totalHouseholds}
-            </Card>
-          </div>
-          <div>
-            <Card title="Total Users" className="dashboard-card card2">
-              {data.totalUsers}
-            </Card>
-          </div>
-          <div>
-            <Card title="Total Usage" className="dashboard-card card3">
-              {data.totalUsage}
-            </Card>
-          </div>
-          <div>
-            <Card title="Water Supplied Today" className="dashboard-card card4">
-              {data.totalUsageToday}
-            </Card>
-          </div>
-          <div>
-            <Card title="Monthly Water Supply" className="dashboard-card card5">
-              {data.monthlyUsage}
-            </Card>
-          </div>
-          <div>
-            <Card title="Yearly Water Supply" className="dashboard-card card6">
-              {data.yearlyUsage}
-            </Card>
-          </div>
-        </div>
-
-        <hr />
-
-        {/* Line chart */}
-        <div className="chart-container">
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={data.usageData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" tickFormatter={formatDate} />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="amount"
-                stroke="#1e90ff"
-                activeDot={{ r: 8 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Pie chart */}
-        <div className="chart-container">
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={data.supplyByCategory}
-                labelLine={false}
-                label={({ name, percent }) => `${(percent * 100).toFixed(0)}%`}
-                outerRadius={80}
-                fill="#00bfff"
-                dataKey="count"
-                nameKey="_id"
-              >
-                {data.supplyByCategory.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={colors[index % colors.length]}
-                  />
-                ))}
-              </Pie>
-              <PieTooltip
-                formatter={(value, name, props) => [
-                  `${value}`,
-                  `${props.payload._id}`,
-                ]}
-              />
-              <PieLegend />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-
-        <div className="tableRow">
-          <hr />
-          <Table
-            dataSource={data.recentReports}
-            scroll={{
-              x: 500,
-            }}
-            columns={[
-              { title: "Period", dataIndex: "period", key: "period" },
-              { title: "Start Date", dataIndex: "startDate", key: "startDate", render: (date) => moment(date).format("DD-MM-YYYY") },
-              { title: "End Date", dataIndex: "endDate", key: "endDate", render: (date) => moment(date).format("DD-MM-YYYY") },
-              { title: "Total Usage", dataIndex: "totalUsage", key: "totalUsage" },
-              { title: "Average Usage Per Household", dataIndex: "averageUsagePerHousehold", key: "averageUsagePerHousehold" },
-              { title: "Leakage Detected", dataIndex: "leakageDetected", key: "leakageDetected", render: (text) => text ? "Yes" : "No" },
-            ]}
-          />
-        </div>
-      </div>
-      {renderReportModal()}
-    </DashboardLayout>
-  );
 };
 
-export default Dashboard;
+// Get All Reports
+const getReports = async (req, res) => {
+    try {
+        const reports = await Report.find();
+        res.status(200).send(reports);
+    } catch (error) {
+        res.status(500).send({ error: "Failed to retrieve reports." });
+    }
+};
+
+// Get Reports Within Start and End Date
+const getReportsByDateRange = async (req, res) => {
+    try {
+        const { startDate, endDate } = req.query;
+        if (!startDate || !endDate) {
+            return res.status(400).send({ error: "Please provide both startDate and endDate." });
+        }
+
+        const reports = await Report.find({
+            startDate: { $gte: new Date(startDate) },
+            endDate: { $lte: new Date(endDate) }
+        }).populate('ward');
+
+        res.status(200).send(reports);
+    } catch (error) {
+        res.status(500).send({ error: "Failed to retrieve reports by date range." });
+    }
+};
+
+// Update Report
+const updateReport = async (req, res) => {
+    try {
+        const report = await Report.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!report) {
+            return res.status(404).send({ error: "Report not found." });
+        }
+        res.status(200).send(report);
+    } catch (error) {
+        res.status(400).send({ error: "Failed to update report." });
+    }
+};
+
+// Delete Report
+const deleteReport = async (req, res) => {
+    try {
+        const result = await Report.findByIdAndDelete(req.params.id);
+        if (!result) {
+            return res.status(404).send({ error: "Report not found." });
+        }
+        res.status(200).send({ message: "Report deleted successfully" });
+    } catch (error) {
+        res.status(500).send({ error: "Failed to delete report." });
+    }
+};
+
+// Get Dashboard Data
+const getDashboardData = async (req, res) => {
+    try {
+        const totalHouseholds = await Household.countDocuments();
+        const totalUsers = await User.countDocuments({ role: 'user' });
+        
+        const totalUsage = await WaterUsage.aggregate([
+            { $group: { _id: null, total: { $sum: "$usage" } } }
+        ]);
+
+        const totalUsageToday = await WaterUsage.aggregate([
+            { 
+                $match: { 
+                    timestamp: { 
+                        $gte: new Date(new Date().setHours(0, 0, 0, 0)), 
+                        $lt: new Date(new Date().setHours(23, 59, 59, 999)) 
+                    } 
+                } 
+            },
+            { $group: { _id: null, total: { $sum: "$usage" } } }
+        ]);
+
+        const monthlyUsage = await WaterUsage.aggregate([
+            { 
+                $match: { 
+                    timestamp: { 
+                        $gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1), 
+                        $lt: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0) 
+                    } 
+                } 
+            },
+            { $group: { _id: null, total: { $sum: "$usage" } } }
+        ]);
+
+        const yearlyUsage = await WaterUsage.aggregate([
+            { 
+                $match: { 
+                    timestamp: { 
+                        $gte: new Date(new Date().getFullYear(), 0, 1), 
+                        $lt: new Date(new Date().getFullYear(), 12, 31) 
+                    } 
+                } 
+            },
+            { $group: { _id: null, total: { $sum: "$usage" } } }
+        ]);
+
+        const recentReports = await Report.find().sort({ createdAt: -1 }).limit(5);
+
+        res.status(200).send({
+            totalHouseholds,
+            totalUsers,
+            totalUsage: totalUsage[0]?.total || 0,
+            totalUsageToday: totalUsageToday[0]?.total || 0,
+            monthlyUsage: monthlyUsage[0]?.total || 0,
+            yearlyUsage: yearlyUsage[0]?.total || 0,
+            recentReports
+        });
+    } catch (error) {
+        res.status(500).send({ error: "Failed to retrieve dashboard data." });
+    }
+};
+
+module.exports = { generateReport, getReports, getReportsByDateRange, updateReport, deleteReport, getDashboardData };
