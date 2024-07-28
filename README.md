@@ -1,23 +1,19 @@
-Here’s the updated README for the JalSaarthi project:
-
----
-
 # JalSaarthi - Water Supply Management System
 
 Welcome to the JalSaarthi project! This README provides instructions for setting up and running the project in both development and production environments.
 
 ## Table of Contents
 
-1. Project Overview
-2. Features
-3. Tech Stack
-4. Getting Started
-   - Development Setup
-   - Production Setup
-5. Branches
-6. Deployment
-7. Contributing
-8. License
+1. [Project Overview](#project-overview)
+2. [Features](#features)
+3. [Tech Stack](#tech-stack)
+4. [Getting Started](#getting-started)
+   - [Development Setup](#development-setup)
+   - [Production Setup](#production-setup)
+5. [Branches](#branches)
+6. [Deployment](#deployment)
+7. [Contributing](#contributing)
+8. [License](#license)
 
 ## Project Overview
 
@@ -25,19 +21,30 @@ JalSaarthi is a comprehensive web application designed to manage and monitor wat
 
 ## Features
 
-- Dashboard for water usage and distribution management
-- Management of water leakages
-- User management and contact messages
-- Automated notifications for maintenance and usage metrics
-- Real-time data visualization and reporting
+- **Dashboard** for water usage and distribution management
+- **ManageUsage** for tracking water usage
+- **ManageDistribution** for optimizing water distribution
+- **ManageLeakages** for detecting and managing water leakages
+- **ManageUsers** for user management
+- **ManageContactMessages** for handling user queries and contact messages
+- **Automated notifications** for maintenance and usage metrics
+- **Real-time data visualization** and reporting
+- **Leak detection** with smart valves and predictive analytics
+- **User rewards system** for water conservation
+- **Monthly and yearly reports** on water distribution and usage
+- **Contact Us** feature integrated with the backend
+- **Point redemption system** for users
+- **Instant leakages Reporting** visible to specific users
+- **Low Cost Implementation** NodeMCU+Relay+Waterflow-sensor for real-time data
 
 ## Tech Stack
 
-- Frontend: React
-- Backend: Node.js, Express
-- Database: MongoDB
-- Deployment: Vercel, GitHub
-- CI/CD: GitHub Actions
+- **Frontend**: React
+- **Backend**: Node.js, Express
+- **Database**: MongoDB
+- **IoT Programming**: Arduino IDE
+- **Deployment**: Vercel, GitHub
+- **CI/CD**: GitHub Actions
 
 ## Getting Started
 
@@ -126,9 +133,9 @@ JalSaarthi is a comprehensive web application designed to manage and monitor wat
 We welcome contributions from the community. Please follow these steps:
 
 1. Fork the repository.
-2. Create a new branch from development.
+2. Create a new branch from `development`.
 3. Make your changes.
-4. Open a pull request to the development branch.
+4. Open a pull request to the `development` branch.
 
 ## License
 
