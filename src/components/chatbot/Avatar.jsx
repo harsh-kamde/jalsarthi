@@ -1,6 +1,6 @@
-import React from 'react';
-import ChatbotIcon from '../../assets/chatbot.png';
-import './ChatbotWidget.css';
+import React from "react";
+import ChatbotIcon from "../../assets/chatbot.png";
+import "./ChatbotWidget.css";
 
 const Avatar = () => {
   return (

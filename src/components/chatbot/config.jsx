@@ -1,23 +1,25 @@
 import { createChatBotMessage } from "react-chatbot-kit";
-import Options from './Options/Options';
-import GeneralInfoOptions from './Options/GeneralInfoOptions';
-import MenuOrderingOptions from './Options/MenuOrderingOptions';
-import ReservationsEventsOptions from './Options/ReservationsEventsOptions';
-import LoyaltyRewardsOptions from './Options/LoyaltyRewardsOptions';
-import PaymentPricingOptions from './Options/PaymentPricingOptions';
-import SpecialRequestsOptions from './Options/SpecialRequestsOptions';
-import FeedbackSupportOptions from './Options/FeedbackSupportOptions';
-import SocialMediaOptions from './Options/SocialMediaOptions';
-import AdditionalFeaturesOptions from './Options/AdditionalFeaturesOptions';
+import Options from "./Options/Options";
+import GeneralInfoOptions from "./Options/GeneralInfoOptions";
+import ReportIssuesOptions from "./Options/ReportIssuesOptions";
+import BillingAndPaymentsOptions from "./Options/BillingAndPaymentsOptions";
+import NewConnectionsOptions from "./Options/NewConnectionsOptions";
+import WaterQualityOptions from "./Options/WaterQualityOptions";
+import EmergencyServicesOptions from "./Options/EmergencyServicesOptions";
+import ConservationTipsOptions from "./Options/ConservationTipsOptions";
+import MaintenanceRequestsOptions from "./Options/MaintenanceRequestsOptions";
+import FeedbackSupportOptions from "./Options/FeedbackSupportOptions";
+import AccountManagementOptions from "./Options/AccountManagementOptions";
+import AdditionalFeaturesOptions from "./Options/AdditionalFeaturesOptions";
 
 import Avatar from "./Avatar";
 
 const config = {
-  botName: "SkyHutBot",
+  botName: "IndoreWaterBot",
   initialMessages: [
-    createChatBotMessage("Hello there! 👋 It's nice to meet you!"),
+    createChatBotMessage("Hello there! 👋"),
     createChatBotMessage(
-      "What brings you here today? Please use the navigation below or ask me anything about Sky Hut Cafe.",
+      " How can I assist you with your water supply needs today?",
       {
         withAvatar: false,
         delay: 800,
@@ -38,32 +40,40 @@ const config = {
       widgetFunc: (props) => <GeneralInfoOptions {...props} />,
     },
     {
-      widgetName: "menuOrderingOptions",
-      widgetFunc: (props) => <MenuOrderingOptions {...props} />,
+      widgetName: "reportIssuesOptions",
+      widgetFunc: (props) => <ReportIssuesOptions {...props} />,
     },
     {
-      widgetName: "reservationsEventsOptions",
-      widgetFunc: (props) => <ReservationsEventsOptions {...props} />,
+      widgetName: "billingAndPaymentsOptions",
+      widgetFunc: (props) => <BillingAndPaymentsOptions {...props} />,
     },
     {
-      widgetName: "loyaltyRewardsOptions",
-      widgetFunc: (props) => <LoyaltyRewardsOptions {...props} />,
+      widgetName: "newConnectionsOptions",
+      widgetFunc: (props) => <NewConnectionsOptions {...props} />,
     },
     {
-      widgetName: "paymentPricingOptions",
-      widgetFunc: (props) => <PaymentPricingOptions {...props} />,
+      widgetName: "waterQualityOptions",
+      widgetFunc: (props) => <WaterQualityOptions {...props} />,
     },
     {
-      widgetName: "specialRequestsOptions",
-      widgetFunc: (props) => <SpecialRequestsOptions {...props} />,
+      widgetName: "emergencyServicesOptions",
+      widgetFunc: (props) => <EmergencyServicesOptions {...props} />,
+    },
+    {
+      widgetName: "conservationTipsOptions",
+      widgetFunc: (props) => <ConservationTipsOptions {...props} />,
+    },
+    {
+      widgetName: "maintenanceRequestsOptions",
+      widgetFunc: (props) => <MaintenanceRequestsOptions {...props} />,
     },
     {
       widgetName: "feedbackSupportOptions",
       widgetFunc: (props) => <FeedbackSupportOptions {...props} />,
     },
     {
-      widgetName: "socialMediaOptions",
-      widgetFunc: (props) => <SocialMediaOptions {...props} />,
+      widgetName: "accountManagementOptions",
+      widgetFunc: (props) => <AccountManagementOptions {...props} />,
     },
     {
       widgetName: "additionalFeaturesOptions",

@@ -254,7 +254,6 @@ const HeaderNav = ({ open, setOpen, content }) => {
             rules={[{ required: true, message: 'Please select the status!' }]}
           >
             <Select>
-              <Select.Option value="reported">Reported</Select.Option>
               <Select.Option value="in_progress">In Progress</Select.Option>
               <Select.Option value="resolved">Resolved</Select.Option>
             </Select>

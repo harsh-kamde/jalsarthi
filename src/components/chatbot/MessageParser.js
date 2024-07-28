@@ -1,25 +1,26 @@
+// components/MessageParser.jsx
+
 class MessageParser {
   constructor(actionProvider) {
     this.actionProvider = actionProvider;
     this.keywords = {
       greeting: /(hello|hi|hey)/i,
-      location: /(located|location)/i,
-      contact: /(contact details|phone number|email|contact)/i,
-      wifi: /(wi-fi|wifi)/i,
-      events: /(special events|parties|events)/i,
-      menu: /(menu|food|dishes)/i,
-      dietary: /(vegetarian|vegan|gluten-free|dietary restrictions)/i,
-      specials: /(specials|today's specials)/i,
-      order: /(pickup order|delivery order|customize order|issue with my order|order issue|report a problem)/i,
-      discounts: /(discounts|promotions|discount code|coupon|discount)/i,
-      reservation: /(reservation|book a table|table reservation|reschedule|cancel reservation|booking)/i,
-      loyalty: /(loyalty|loyalty program|earn points|redeem points|point balance|check balance)/i,
-      payment: /(payment methods|pay online|minimum order amount|pricing|payment)/i,
-      refund: /(refund policy|how to get a refund|refund process|refund)/i, 
-      social: /(facebook|instagram|social media|follow on instagram|instagram-only promotions|discount for following on instagram)/i,
-      media: /(360 view|gallery images|qr code|tour)/i,
-      feedback: /(feedback|review|rating)/i,
-      support: /(support|customer support|issue with my order|report a problem)/i,
+      location:
+        /(office location|office address|where are you located|our location)/i,
+      contact: /(contact details|phone number|email|contact us)/i,
+      waterQuality:
+        /(water quality|water reports|contaminants|water testing|purification methods|water issues)/i,
+      billing: /(billing|bill|payment|invoice|account statement)/i,
+      maintenance:
+        /(maintenance request|repair request|water supply issue|pipeline issue|maintenance)/i,
+      newConnection:
+        /(new connection|apply for new water connection|water service application)/i,
+      conservation:
+        /(water conservation|save water|conservation tips|water-efficient practices)/i,
+      emergency:
+        /(emergency services|emergency contact|urgent issue|water emergency)/i,
+      feedback: /(feedback|complaints|suggestions|review)/i,
+      support: /(support|customer support|assistance|help)/i,
     };
   }
 
@@ -36,56 +37,35 @@ class MessageParser {
     for (const category in this.keywords) {
       if (this.keywords[category].test(lowerCaseMessage)) {
         switch (category) {
-          case 'location':
+          case "location":
             this.actionProvider.handleLocation();
             return;
-          case 'contact':
+          case "contact":
             this.actionProvider.handleContactDetails();
             return;
-          case 'wifi':
-            this.actionProvider.handleWiFi();
+          case "waterQuality":
+            this.actionProvider.handleWaterQuality();
             return;
-          case 'events':
-            this.actionProvider.handleSpecialEvents();
+          case "billing":
+            this.actionProvider.handleBilling();
             return;
-          case 'menu':
-            this.actionProvider.handleMenu();
+          case "maintenance":
+            this.actionProvider.handleMaintenanceRequests();
             return;
-          case 'dietary':
-            this.actionProvider.handleSpecialDietaryOptions();
+          case "newConnection":
+            this.actionProvider.handleNewConnection();
             return;
-          case 'specials':
-            this.actionProvider.handleSpecials();
+          case "conservation":
+            this.actionProvider.handleConservationTips();
             return;
-          case 'order':
-            this.actionProvider.handlePickupOrder();
+          case "emergency":
+            this.actionProvider.handleEmergencyServices();
             return;
-          case 'discounts': 
-            this.actionProvider.handleDiscountsPromotions();
+          case "feedback":
+            this.actionProvider.handleFeedback();
             return;
-          case 'reservation': 
-            this.actionProvider.handleReservation();
-            return;
-          case 'loyalty': 
-            this.actionProvider.handleLoyaltyProgram();
-            return;
-          case 'payment': 
-            this.actionProvider.handlePaymentMethods();
-            return;
-          case 'refund': 
-            this.actionProvider.handleRefundPolicy();
-            return;
-          case 'social': 
-            this.actionProvider.handleSocialMedia();
-            return;
-          case 'media': 
-            this.actionProvider.handle360View();
-            return;
-          case 'feedback':
-            this.actionProvider.handleFeedbackReview();
-            return;
-          case 'support':
-            this.actionProvider.handleCustomerSupport();
+          case "support":
+            this.actionProvider.handleSupport();
             return;
           default:
             this.actionProvider.handleDefault();

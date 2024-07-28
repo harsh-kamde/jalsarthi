@@ -1,17 +1,53 @@
 // components/Options/GeneralInfoOptions.jsx
 
-import React from 'react';
-import './Options.css';
+import React from "react";
+import "./Options.css";
 import { createChatBotMessage } from "react-chatbot-kit";
 
-const GeneralInfoOptions = ({ setState}) => {
+const GeneralInfoOptions = ({ setState }) => {
   const options = [
-    { text: 'Opening Hours', handler: () => handleGeneralInfoResponse('Our opening hours are: Monday to Friday: 8 AM - 10 PM, Saturday and Sunday: 9 AM - 11 PM') },
-    { text: 'Location', handler: () => handleGeneralInfoResponse('We are located at [Cafe Address]. Here is a link to our location on Google Maps: [Map Link]') },
-    { text: 'Parking Facilities', handler: () => handleGeneralInfoResponse('Yes, we have ample parking space available for our customers.') },
-    { text: 'Contact Details', handler: () => handleGeneralInfoResponse('You can contact us at: Phone: [Phone Number], Email: [Email Address]') },
-    { text: 'Wi-Fi Availability', handler: () => handleGeneralInfoResponse('Yes, we offer free Wi-Fi for all our customers.') },
-    { text: 'Special Events', handler: () => handleGeneralInfoResponse('Yes, we have the following events coming up: [Event 1] on [Date], [Event 2] on [Date]') },
+    {
+      text: "Office Hours",
+      handler: () =>
+        handleGeneralInfoResponse(
+          "Our office hours are: Monday to Friday: 9 AM - 5 PM"
+        ),
+    },
+    {
+      text: "Office Location",
+      handler: () =>
+        handleGeneralInfoResponse(
+          "Our office is located at [Office Address]. Here is a link to our location on Google Maps: [Map Link]"
+        ),
+    },
+    {
+      text: "Contact Details",
+      handler: () =>
+        handleGeneralInfoResponse(
+          "You can contact us at: Phone: [Phone Number], Email: [Email Address]"
+        ),
+    },
+    {
+      text: "Emergency Hotline",
+      handler: () =>
+        handleGeneralInfoResponse(
+          "For water supply emergencies, please contact our emergency hotline at [Emergency Hotline Number]"
+        ),
+    },
+    {
+      text: "Water Quality Reports",
+      handler: () =>
+        handleGeneralInfoResponse(
+          "You can view our latest water quality reports here: [Water Quality Report Link]"
+        ),
+    },
+    {
+      text: "Billing Inquiries",
+      handler: () =>
+        handleGeneralInfoResponse(
+          "For billing inquiries, please visit our billing section on the website: [Billing Section Link] or contact our billing department at [Billing Contact Number]."
+        ),
+    },
   ];
 
   function handleGeneralInfoResponse(response) {

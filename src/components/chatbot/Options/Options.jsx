@@ -4,7 +4,7 @@ import { createChatBotMessage } from "react-chatbot-kit";
 
 const Options = ({ setState }) => {
   const createHandler = (widgetName) => () => {
-    console.log("createHandler called",widgetName);
+    console.log("createHandler called", widgetName);
     const messages = [
       createChatBotMessage('What would you like to know?', {
         widget: widgetName,
@@ -14,15 +14,14 @@ const Options = ({ setState }) => {
   };
 
   const options = [
-    { text: 'General Information', widgetName: 'generalInfoOptions' },
-    { text: 'Menu and Ordering', widgetName: 'menuOrderingOptions' },
-    { text: 'Reservations and Events', widgetName: 'reservationsEventsOptions' },
-    { text: 'Loyalty and Rewards', widgetName: 'loyaltyRewardsOptions' },
-    { text: 'Payment and Pricing', widgetName: 'paymentPricingOptions' },
-    { text: 'Special Requests', widgetName: 'specialRequestsOptions' },
-    { text: 'Feedback and Support', widgetName: 'feedbackSupportOptions' },
-    { text: 'Social Media and Community', widgetName: 'socialMediaOptions' },
-    { text: 'Additional Features', widgetName: 'additionalFeaturesOptions' },
+    { text: "General Information", widgetName: "generalInfoOptions" },
+    { text: "Report Issues", widgetName: "reportIssuesOptions" },
+    { text: "Billing and Payments", widgetName: "billingAndPaymentsOptions" },
+    { text: "New Connections", widgetName: "newConnectionsOptions" },
+    { text: "Water Quality", widgetName: "waterQualityOptions" },
+    { text: "Water Conservation Tips", widgetName: "conservationTipsOptions" },
+    { text: "Maintenance Requests", widgetName: "maintenanceRequestsOptions" },
+    { text: "Additional Features", widgetName: "additionalFeaturesOptions" },
   ];
 
   return (
