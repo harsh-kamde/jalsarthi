@@ -12,6 +12,7 @@ import {
   Pie,
   Cell,
   ResponsiveContainer,
+  Label,
 } from "recharts";
 import DashboardLayout from "../Dashboard/DashboardLayout";
 import "../../../stylesheets/Admin/Dashboard/Dashboard.css";
@@ -48,8 +49,8 @@ const Dashboard = () => {
       {
         status: "Pending",
         address: {
-          firstName: "Jane",
-          lastName: "Smith",
+          firstName: "Rahul",
+          lastName: "Kumar",
           phone: "0987654321",
         },
         amount: 150,
@@ -75,12 +76,7 @@ const Dashboard = () => {
         visible={reportModalVisible}
         onCancel={handleCloseReportModal}
         footer={[
-          <Button
-            key="download"
-            type="primary"
-            href="#"
-            download
-          >
+          <Button key="download" type="primary" href="#" download>
             Download
           </Button>,
           <Button key="close" onClick={handleCloseReportModal}>
@@ -154,11 +150,16 @@ const Dashboard = () => {
         <hr />
 
         <div className="chart-container">
+          <h3>Daily Water Usage</h3>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={data.usageData}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" tickFormatter={formatDate} />
-              <YAxis />
+              <XAxis dataKey="date" tickFormatter={formatDate}>
+                <Label value="Date" offset={-5} position="insideBottom" />
+              </XAxis>
+              <YAxis>
+                <Label value="Amount" angle={-90} position="insideLeft" />
+              </YAxis>
               <Tooltip />
               <Legend />
               <Line
@@ -172,6 +173,7 @@ const Dashboard = () => {
         </div>
 
         <div className="chart-container">
+          <h3>Water Usage Distribution</h3>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -185,7 +187,10 @@ const Dashboard = () => {
                 label
               >
                 {data.usageData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={colors[index % colors.length]}
+                  />
                 ))}
               </Pie>
               <Tooltip />

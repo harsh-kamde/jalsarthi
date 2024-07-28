@@ -1,26 +1,21 @@
-import React, { useContext } from "react";
-import { Popover, Drawer, Button } from "antd";
+import React, { useContext, useState } from "react";
+import { Popover, Drawer, Button, Modal, Form, Input, Select, DatePicker } from "antd";
 import { NavLink, useNavigate } from "react-router-dom";
 import { FaBars } from "react-icons/fa";
 import { assets } from "../../../assets/assets";
 import { StoreContext } from "../../../context/StoreContext";
 import "../../../stylesheets/Admin/Dashboard/DashboardSidebar.css";
 import "../../../stylesheets/Shared/Header.css";
-
-import {
-  FaHome,
-  FaAddressBook,
-  FaPhoneAlt,
-  FaSignInAlt,
-} from "react-icons/fa";
+import { FaHome, FaAddressBook, FaPhoneAlt, FaSignInAlt } from "react-icons/fa";
 
 const HeaderNav = ({ open, setOpen, content }) => {
-  const { token, getTotalCartAmount, isOfflineOrder, cartItems } =
-    useContext(StoreContext);
+  const { token, getTotalCartAmount, isOfflineOrder, cartItems } = useContext(StoreContext);
 
   const navigate = useNavigate();
-
   const role = localStorage.getItem("userRole");
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [form] = Form.useForm();
 
   // Function to calculate the sum of all values in the cartItems object
   const calculateSum = () => {
@@ -29,15 +24,33 @@ const HeaderNav = ({ open, setOpen, content }) => {
 
   const totalItems = calculateSum();
 
-  console.log("User role = ", role);
-  console.log("Total cart items = ", totalItems);
-
   const showDrawer = () => {
     setOpen(true);
   };
 
   const onClose = () => {
     setOpen(false);
+  };
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    form
+      .validateFields()
+      .then(values => {
+        form.resetFields();
+        setIsModalVisible(false);
+        console.log('Reported leakage details: ', values);
+      })
+      .catch(info => {
+        console.log('Validate Failed:', info);
+      });
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
   };
 
   return (
@@ -57,7 +70,6 @@ const HeaderNav = ({ open, setOpen, content }) => {
               </NavLink>
             </li>
           )}
-
           {role !== "admin" && role !== "staff" && (
             <li>
               <NavLink
@@ -70,7 +82,6 @@ const HeaderNav = ({ open, setOpen, content }) => {
               </NavLink>
             </li>
           )}
-
           {role !== "admin" && role !== "staff" && (
             <li>
               <NavLink
@@ -83,7 +94,6 @@ const HeaderNav = ({ open, setOpen, content }) => {
               </NavLink>
             </li>
           )}
-
           {role !== "admin" && role !== "staff" && (
             <li>
               <NavLink
@@ -96,7 +106,6 @@ const HeaderNav = ({ open, setOpen, content }) => {
               </NavLink>
             </li>
           )}
-
           {!token && (
             <li>
               <NavLink
@@ -153,6 +162,12 @@ const HeaderNav = ({ open, setOpen, content }) => {
         {role !== "admin" && role !== "staff" && (
           <FaBars className="mobile-nav-toggle" onClick={showDrawer} />
         )}
+
+        {role === "user" && (
+          <Button type="primary" onClick={showModal} className="ms-3">
+            Report a Leakage
+          </Button>
+        )}
       </nav>
 
       {/* Mobile drawer */}
@@ -184,7 +199,6 @@ const HeaderNav = ({ open, setOpen, content }) => {
                 </NavLink>
               </li>
             )}
-
             {role !== "admin" && role !== "staff" && (
               <li>
                 <NavLink to={"/about"} activeClassName="active">
@@ -192,7 +206,6 @@ const HeaderNav = ({ open, setOpen, content }) => {
                 </NavLink>
               </li>
             )}
-           
             {role !== "admin" && role !== "staff" && (
               <li>
                 <NavLink to={"/contact"} activeClassName="active">
@@ -200,7 +213,6 @@ const HeaderNav = ({ open, setOpen, content }) => {
                 </NavLink>
               </li>
             )}
-
             {!token && (
               <li>
                 <NavLink to={"/login"} activeClassName="active">
@@ -211,6 +223,51 @@ const HeaderNav = ({ open, setOpen, content }) => {
           </ul>
         </nav>
       </Drawer>
+
+      {/* Leakage Reporting Modal */}
+      <Modal title="Report a Leakage" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+        <Form form={form} layout="vertical" name="leakage_report_form">
+          <Form.Item
+            name="household"
+            label="Household"
+            rules={[{ required: true, message: 'Please select the household!' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="location"
+            label="Leakage Location"
+            rules={[{ required: true, message: 'Please input the location of the leakage!' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="description"
+            label="Description"
+            rules={[{ required: true, message: 'Please input the description of the leakage!' }]}
+          >
+            <Input.TextArea />
+          </Form.Item>
+          <Form.Item
+            name="status"
+            label="Status"
+            rules={[{ required: true, message: 'Please select the status!' }]}
+          >
+            <Select>
+              <Select.Option value="reported">Reported</Select.Option>
+              <Select.Option value="in_progress">In Progress</Select.Option>
+              <Select.Option value="resolved">Resolved</Select.Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            name="dateReported"
+            label="Date Reported"
+            rules={[{ required: true, message: 'Please select the date reported!' }]}
+          >
+            <DatePicker />
+          </Form.Item>
+        </Form>
+      </Modal>
     </>
   );
 };
