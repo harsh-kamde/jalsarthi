@@ -1,6 +1,8 @@
 # JalSaarthi - Water Supply Management System
 
 Welcome to the JalSaarthi project! This README provides instructions for setting up and running the project in both development and production environments.
+We are always ready to serve you! Visit: www.nirogsathi.in
+
 
 ![image](https://github.com/user-attachments/assets/3aecc7b9-c668-4d06-ac3f-93489b6e9217)
 
