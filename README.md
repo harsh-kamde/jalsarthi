@@ -1,7 +1,8 @@
 # JalSaarthi - Digital Indore's Digital Water Supply Management Solution
 
 We team NirogSathi presents JalSaarthi! This README provides instructions for setting up and running the project in both development and production environments.
-We are always ready to serve you! Visit: www.nirogsathi.in
+We are always ready to serve you! 
+Visit us: www.nirogsathi.in
 
 
 ![image](https://github.com/user-attachments/assets/3aecc7b9-c668-4d06-ac3f-93489b6e9217)
