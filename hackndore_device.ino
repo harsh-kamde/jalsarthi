@@ -54,9 +54,8 @@ void loop()
         cloopTime = currentTime;
 
         // Calculate the flow rate in liters/minute
-        flowRate = (flowPulseCount / 7.5); // assuming the sensor gives 7.5 pulses per liter
-        flowPulseCount = 0;                // Reset the pulse counter
-
+        flowRate = (flowPulseCount / 7.5); 
+        flowPulseCount = 0;                
         Serial.print("Flow rate: ");
         Serial.print(flowRate);
         Serial.println(" L/min");
@@ -69,7 +68,7 @@ void loop()
             http.addHeader("Content-Type", "application/json");
 
             StaticJsonDocument<200> jsonDoc;
-            jsonDoc["household"] = "household_id"; // replace with actual household ID
+            jsonDoc["household"] = "66a3e395635458082456b2d4"; 
             jsonDoc["usage"] = flowRate;
 
             String requestBody;
