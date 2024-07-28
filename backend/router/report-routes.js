@@ -6,7 +6,7 @@ const authMiddleware = require('../middlewares/auth-middleware');
 const Roles = require('../enums/roles');
 
 // Generate Monthly or Yearly Report 
-router.post('/', authMiddleware([Roles.ADMIN]), reportController.generateReport);
+router.post('/generate', reportController.generateReport);
 
 // Get All Reports 
 router.get('/', authMiddleware([Roles.ADMIN]), reportController.getReports);

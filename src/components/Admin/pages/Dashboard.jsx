@@ -17,6 +17,8 @@ import {
 import DashboardLayout from "../Dashboard/DashboardLayout";
 import "../../../stylesheets/Admin/Dashboard/Dashboard.css";
 import moment from "moment";
+import axios from "axios";
+import { API_URL } from "../../../store/apiUrl";
 
 const Dashboard = () => {
   const [data, setData] = useState({
@@ -39,8 +41,8 @@ const Dashboard = () => {
       {
         status: "Completed",
         address: {
-          firstName: "John",
-          lastName: "Doe",
+          firstName: "Nilmani",
+          lastName: "Prasad",
           phone: "1234567890",
         },
         amount: 100,
@@ -89,6 +91,23 @@ const Dashboard = () => {
     );
   };
 
+  const token = localStorage.getItem("token");
+
+  const fetchReport = async (reportType) => {
+    try {
+      console.log("reportType: ",reportType);
+      const response = await axios.post(
+        `${API_URL}/api/v1/reports/generate`,
+        { period: reportType, wardId: "66a3e17cac25d09f4341102d" },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setReportContent(response.data);
+      setReportModalVisible(true);
+    } catch (error) {
+      console.error("Failed to fetch report", error);
+    }
+  };
+
   const colors = [
     "#1e90ff",
     "#00bfff",
@@ -109,21 +128,14 @@ const Dashboard = () => {
           <div className="report-buttons">
             <Button
               type="primary"
-              onClick={() => console.log("Generate Weekly Report")}
-              className="report-btn"
-            >
-              Weekly Report
-            </Button>
-            <Button
-              type="primary"
-              onClick={() => console.log("Generate Monthly Report")}
+              onClick={() => fetchReport("monthly")}
               className="report-btn"
             >
               Monthly Report
             </Button>
             <Button
               type="primary"
-              onClick={() => console.log("Generate Yearly Report")}
+              onClick={() => fetchReport("yearly")}
               className="report-btn"
             >
               Yearly Report
