@@ -28,7 +28,7 @@ const HomePage = () => {
       <OurChefs />
       <FAQs />
       <Footer />
-      {/* <ChatbotWidget /> */}
+      <ChatbotWidget />
     </>
   );
 };
