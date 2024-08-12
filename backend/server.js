@@ -35,7 +35,7 @@ app.use('/api/v1/leakage',leakageRouter);
 
 app.use(errorMiddleware);
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5008;
 
 connectDb().then(()=>{
     app.listen(PORT,()=>{
